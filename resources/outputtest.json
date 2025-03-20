@@ -1,0 +1,26 @@
+[
+    {
+        "_index": "products_search_index-20250318_065953",
+        "_id": "126048",
+        "_score": 3.0,
+        "_source": {
+            "libelleProduit": "Câble U1000 R2V 5G1,5 mm² 50 m",
+            "usageUtilite": "Les <strong>câbles U-1000 R2V 50 m</strong> sont destinés à un usage courant dans l'industrie et sont particulièrement recommandés pour les installations fixes de distribution d'énergie basse tension.<br><br>Ce câble peut être utilisé pour <strong>circuit de prise, de chauffage, prises spécialisées, chauffe-eau....jusqu'à 20 A avec terre.</strong><br><br>L'usage des câbles multiconducteurs est adapté aux installations de télécommande et de télé-contrôle.<br><br>La section des fils joue un rôle essentiel dans la sécurité d'une installation électrique. Elle va dépendre de plusieurs facteurs : L'intensité, la puissance et la longueur de câble prévue. <br><br>Le câble rigide électrique de type R2V, contient 3 conducteurs en cuivre de 2,5 mm² de section pour une installation domestique et industrielles.<br><br>Les câbles U-1000 R2V peuvent être installés en extérieur à l'air libre sans protection supplémentaire (résistance aux UV , AN3 selon NF C 15-100) à l'aide de colliers ou attaches de fixation.<br>",
+            "plusProduit": "Les avantages de ce produit sont :<br> - Contient 5 conducteurs de 1,5 mm² de section dont un conducteur de terre<br>- Il est recommandé pour les installations en triphasé jusqu'à 20 Ampères.<br>- Codage par couleur pratique pour identifier les composants de fil qui composent le câble<br>",
+            "marque": "",
+            "descriptifComplementaire": "Âme en service : 90°C maximum en régime normal et 250°C maximum en court circuit.<br>Transport, installation et manutention : de -10 à 60°C<br>Non propagateur de la flamme (C2)<br>Tension 0.6/1 KV<br>La référence de cet article dans le catalogue fournisseur est <em>303050090</em>"
+        }
+    },
+    {
+        "_index": "products_search_index-20250318_065953",
+        "_id": "32025",
+        "_score": 3.0,
+        "_source": {
+            "libelleProduit": "Gaine électrique ICTA gris diamètre 20 mm L 50 m",
+            "usageUtilite": "La <strong>gaine électrique ICTA Ø 20 mm</strong> est un tube annelé en matière plastique (polypropylène) qui sert de conduit pour protéger les fils et câbles électriques d'une installation lors de la réalisation par exemple d'un circuit de prises électriques dans les cloisons sèches ou pleines, dans des dalles bétons et même dans les vides sanitaires.<br><br><strong> ICTA signifie Isolant Cintrable Transversalement Annelé </strong>.<br><br>La gaine électrique ICTA se pose en montage apparent dit en saillie ou encastré pour des installations électriques des bâtiments d'habitation. L'utilisation de ces gaines est devenu obligatoire dans le cadre d'une installation électrique résidentielle ou professionnelle.  <br><br>Pour vous faciliter le passage des fils au sein de cette gaine, nous vous préconisons d'utiliser un <strong>tire-fil</strong>ainsi qu'un lubrifiant Caprigel aidant le glissement des câbles électriques tout au long de la gaine. <br><br>Ces deux accessoires sont vendus séparément mais vous faciliteront bien l'acheminent de vos fils !<br><br>Afin d'éviter les fuites d'air et pour obtenir une finition optimale, il est également possible d'ajouter un obturateur à l'extrémité de la gaine.<br><br>Pour la fixation des gaines, nous vous recommandons d'utiliser des attaches adaptées de type FIX-ring ou feuillard pour un meilleur maintien<br><br>De même pour effectuer la jonction entre 2 gaines, utilisez des raccords type Eco-ring qui seront adaptés et adéquates pour cette installation. (l'adhésif étant interdit)<br>",
+            "plusProduit": "Les avantages de ce produit sont :<br>- Résiste aux chocs, à la chaleur et à l'humidité,<br>- Protège vos câbles, <br>- Se pose en saillie ou en encastré,<br>- Non propagateur de flammes.",
+            "marque": "PROFIFLEX",
+            "descriptifComplementaire": "La norme n'impose aucun diamètre minimum en fonction du nombre de fils et de leur section mais sachez qu'une gaine large facilite le tirage des lignes et permet même des ajouts si besoin.<br><br>Pour éviter les fuites d'air et obtenir une finition , il est également possible d'ajouter un obturateur à l'extrémité de la gaine."
+        }
+    }
+  ]
