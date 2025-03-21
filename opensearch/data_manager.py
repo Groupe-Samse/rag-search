@@ -1,6 +1,8 @@
 from datetime import datetime
 
 
+OPENSEARCH_BATCH_SIZE = 200
+
 class OpenSearchDataManager:
 
     def __init__(self, opensearch_client):
@@ -15,14 +17,19 @@ class OpenSearchDataManager:
         :param id_field: id field
         """
         bulk_data = []
-        for hit in data:
+        for i, hit in enumerate(data):
             action = {
                 "index": {"_index": index_name, id_field: hit[id_field]}
             }
             bulk_data.append(action)
             bulk_data.append(hit)
 
-        self.client.bulk(bulk_data)
+            if (i + 1) % OPENSEARCH_BATCH_SIZE == 0 or (i + 1) == len(data):
+                self.client.bulk(bulk_data)
+                bulk_data = []
+                completion_percentage = ((i + 1) / len(data)) * 100
+                print(f"Progress: {completion_percentage:.2f}%")
+
 
     def create_products_index(self, base_index_name):
         """

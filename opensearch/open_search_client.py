@@ -7,6 +7,10 @@ class OpenSearchClient:
     def __init__(self, host, port):
         """
         Create the client with SSL/TLS enabled, but hostname verification disabled
+        Define the settings for the OpenSearch cluster for ml_commons
+
+        :param host: host
+        :param port: port
         :return: open search client
         """
         self.client = OpenSearch(
@@ -17,8 +21,6 @@ class OpenSearchClient:
             ssl_assert_hostname=False,
             ssl_show_warn=False
         )
-
-    def define_cluster_settings(self):
         settings = {
             "persistent": {
                 "plugins.ml_commons.memory_feature_enabled": True,

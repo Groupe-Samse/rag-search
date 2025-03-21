@@ -73,7 +73,7 @@ class OpenSearchModelManager:
                     "text_embedding": {
                         "model_id": model_id,
                         "field_map": {
-                            "text": "embedding"
+                            "text": "text_embedding"
                         }
                     }
                 }

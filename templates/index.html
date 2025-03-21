@@ -3,20 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
+    <title>RAGSearch</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="static/assets/favicon.webp">
 </head>
 <body>
-    <div id="background"></div> <!-- Fond d'écran -->
+<div id="background"></div>
 
-    <div id="chat-container">
-        <div id="chat-box">
-            <div class="message bot">Bienvenue, Voyageur. Que souhaitez-vous savoir ?</div>
-        </div>
-        <input type="text" id="user-input" placeholder="Écrivez votre message..." onkeydown="checkEnter(event)" autofocus>
-        <button onclick="sendMessage()">Envoyer</button>
+<div class="command-container">
+    <button id="fetch-data" onclick="elastic_button()">
+        <img src="static/assets/elastic.svg" alt="Télécharger données elastic" class="icon">
+    </button>
+    <div id="log-output" class="log-output"></div>
+</div>
+
+<div class="command-container">
+    <button id="upload-data" onclick="opensearch_button()">
+        <img src="static/assets/opensearch.png" alt="Uploader données dans opensearch" class="icon">
+    </button>
+    <div id="log-opensearch-output" class="log-output"></div>
+</div>
+
+<div class="command-container">
+    <button id="create-agent" onclick="create_and_deploy_agent()">
+        <img src="static/assets/data_server.webp" alt="Creer un agent dans opensearch" class="icon">
+    </button>
+    <div id="create-agent-output" class="log-output"></div>
+</div>
+
+
+<div id="chat-container">
+    <div id="chat-box">
+        <div class="message bot">Bienvenue, Bricoleur. Que souhaitez-vous savoir ?</div>
     </div>
+    <div class="chat-input">
+        <input type="text" id="user-input" placeholder="Écrivez votre message..." onkeydown="checkEnter(event)"
+               autofocus>
+    </div>
+    <button onclick="sendMessage()">Envoyer</button>
+</div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

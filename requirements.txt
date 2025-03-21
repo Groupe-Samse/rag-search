@@ -1,1 +1,5 @@
 requests~=2.32.3
+Flask
+elasticsearch
+opensearch-py
+config_loader
