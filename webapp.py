@@ -2,6 +2,7 @@ import json
 
 from flask import Flask, render_template, request, jsonify
 
+from app import upload_and_query_model
 from connectors.elasticsearch.elastic_search_client import ElasticSearchClient
 
 app = Flask(__name__)
@@ -17,9 +18,9 @@ def home():
 
 @app.route("/get_response", methods=["POST"])
 def get_response():
-    user_message = request.json["message"].lower()  # Convertir en minuscules
     print(request.json)
-    response = chatbot_data.get(user_message, "Désolé, je ne comprends pas...")
+    user_message = request.json["message"]
+    response = upload_and_query_model(question=user_message)
     return jsonify({"response": response})
 
 

@@ -16,15 +16,15 @@ function sendMessage() {
     userMessage.textContent = userInput.value;
     chatBox.appendChild(userMessage);
 
+    let userText = userInput.value;
+
     // Simuler une réponse du bot avec animation
     setTimeout(() => {
         let botMessage = document.createElement("div");
         botMessage.classList.add("message", "bot");
         chatBox.appendChild(botMessage);
 
-        fetchResponse(userInput).then(response => {
-            console.log("Message utilisateur :", userInput.value);
-            console.log("Réponse finale :", response);
+        fetchResponse(userText).then(response => {
             typeWriter(botMessage, response);
         });
 
@@ -51,10 +51,10 @@ async function fetchResponse(userText) {
 }
 
 // Effet machine à écrire
-function typeWriter(element, text, i = 0) {
+function typeWriter(element, text, i = 0, step = 3, speed = 20) {
     if (i < text.length) {
-        element.textContent += text.charAt(i);
-        setTimeout(() => typeWriter(element, text, i + 1), 50);
+        element.textContent += text.substring(i, i + step); // Ajoute plusieurs caractères à la fois
+        setTimeout(() => typeWriter(element, text, i + step, step, speed), speed);
     }
 }
 

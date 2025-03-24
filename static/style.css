@@ -136,6 +136,14 @@ button:hover {
     background-color: #666;
 }
 
+#create-agent:hover {
+    background-color: #666;
+}
+
+#upload-data:hover {
+    background-color: #666;
+}
+
 .icon {
     width: 40px;
     height: 40px;

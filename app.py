@@ -1,4 +1,5 @@
 import configparser
+import json
 import os
 import sys
 
@@ -64,7 +65,7 @@ def upload_data():
     upload_and_query_model(new_index_name)
 
 
-def upload_and_query_model(new_index_name):
+def upload_and_query_model(new_index_name="products_search_index_20250321175941", question="Bonjour, je souhaite acheter un Câble U1000 R2V 5G1,5 mm² 50 m"):
     # Opensearch model manager
     model_manager = OpenSearchModelManager(opensearch_client)
 
@@ -85,8 +86,9 @@ def upload_and_query_model(new_index_name):
     agent_id = model_manager.register_agent("gpt4o-mini-agent", new_index_name, sentence_transformer_model_id,
                                             gpt_model_id)
     print("Agent id " + agent_id)
-    print(model_manager.query_agent(agent_id, "Bonjour, je souhaite acheter un Câble U1000 R2V 5G1,5 mm² 50 m"))
-
+    inference = model_manager.query_agent(agent_id, question)
+    print(inference)
+    return json.loads(inference["inference_results"][0]["output"][0]["result"])["choices"][0]["message"]["content"]
 
 if __name__ == "__main__":
-    upload_data()
+    upload_and_query_model()
