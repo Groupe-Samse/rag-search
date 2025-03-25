@@ -101,4 +101,4 @@ def upload_and_query_model(new_index_name="products_search_index_20250321175941"
     return json.loads(inference["inference_results"][0]["output"][0]["result"])["choices"][0]["message"]["content"]
 
 if __name__ == "__main__":
-    upload_and_query_model()
+    print(upload_and_query_model())
