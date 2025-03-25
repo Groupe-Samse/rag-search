@@ -1,14 +1,21 @@
-import json
+import configparser
 
 from flask import Flask, render_template, request, jsonify
 
-from app import upload_and_query_model
 from connectors.elasticsearch.elastic_search_client import ElasticSearchClient
+from opensearch.app import upload_and_query_model
+
+# Config parser
+config = configparser.ConfigParser()
+elasticsearch_host = config["ELASTICSEARCH"].get("HOST")
+elasticsearch_port = config["ELASTICSEARCH"].getint("PORT")
+
+elasticsearch_index_name = config["ELASTICSEARCH"].get("INDEX_NAME")
+elasticsearch_source_fields = config["ELASTICSEARCH"].get("SOURCE_FIELDS")
+elasticsearch_size_limit = config["ELASTICSEARCH"].get("SIZE_LIMIT")
+elasticsearch_query = config["ELASTICSEARCH"].get("QUERY")
 
 app = Flask(__name__)
-
-with open("resources/data.json", "r", encoding="utf-8") as file:
-    chatbot_data = json.load(file)
 
 
 @app.route("/")
@@ -26,10 +33,11 @@ def get_response():
 
 @app.route("/download_from_elastic", methods=["GET"])
 def download_from_elastic():
-    e = ElasticSearchClient("https://labrique-integ-es.samse.fr/")
-    return jsonify({"response": e.import_products_data("products_search_index-20250318_065953",
-                                                       ["libelleProduit", "usageUtilite", "plusProduit", "marque",
-                                                        "descriptifComplementaire"], 1)})
+    e = ElasticSearchClient(elasticsearch_host)
+    return jsonify({"response": e.import_products_data(elasticsearch_index_name,
+                                                       elasticsearch_source_fields,
+                                                       elasticsearch_size_limit,
+                                                       elasticsearch_query)})
 
 
 @app.route("/upload_to_opensearch", methods=["POST"])

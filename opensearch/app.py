@@ -12,7 +12,7 @@ OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
 
 # Config parser
 config = configparser.ConfigParser()
-config.read("config.ini")
+config.read("../config.ini")
 
 host = config["OPENSEARCH"].get("HOST")
 port = config["OPENSEARCH"].getint("PORT")
@@ -50,6 +50,16 @@ def print_config():
 
 
 def upload_data():
+    """
+    Print the configuration
+    Load open search data manager and model manager
+    Deploy the sentence transformer model (from config.ini)
+    Put the ingest pipeline
+    Create a new index
+    Upload the data from the file outputtest.json
+
+    :return:
+    """
     print_config()
     # Data manager
     data_manager = OpenSearchDataManager(opensearch_client)
@@ -60,7 +70,7 @@ def upload_data():
     model_manager.put_ingest_pipeline(sentence_transformer_model_id)
 
     new_index_name = data_manager.create_products_index(index_name)
-    data_manager.upload_data_file(read_clean_and_aggregate_tab("resources/outputtest.json"), new_index_name, field_id)
+    data_manager.upload_data_file(read_clean_and_aggregate_tab("../resources/outputtest.json"), new_index_name, field_id)
 
     upload_and_query_model(new_index_name)
 
