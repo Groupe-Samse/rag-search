@@ -1,6 +1,12 @@
+import configparser
 import json
+import os
 
 from elasticsearch import Elasticsearch
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+output_path = os.path.join(current_dir, "../../resources/output.json")
+os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
 
 class ElasticSearchClient:
@@ -23,7 +29,6 @@ class ElasticSearchClient:
             "size": self.batch_size,
             "query": query
         }
-
         response = self.client.search(index=elastic_index_name, body=query, scroll="2m")
 
         scroll_id = response["_scroll_id"]
@@ -36,7 +41,18 @@ class ElasticSearchClient:
             hits = response["hits"]["hits"]
             all_results.extend(hits)
 
-        with open("../../resources/output.json", "w", encoding="utf-8") as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             json.dump(all_results, f, ensure_ascii=False, indent=4)
 
         return f"Extraction over : {len(all_results)} documents saved in output.json"
+
+
+if __name__ == "__main__":
+    config = configparser.ConfigParser()
+    config.read("../../config.ini")
+    elastic_search_config = config["ELASTICSEARCH"]
+    elastic_client = ElasticSearchClient(elastic_search_config)
+    elastic_client.import_products_data(elastic_search_config.get("INDEX_NAME"),
+                                        json.loads(elastic_search_config.get("SOURCE_FIELDS")),
+                                        int(elastic_search_config.get("SIZE_LIMIT")),
+                                        json.loads(elastic_search_config.get("QUERY")))

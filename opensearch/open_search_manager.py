@@ -1,3 +1,4 @@
+import configparser
 import json
 import os
 import sys
@@ -8,6 +9,8 @@ from opensearch.model_manager import OpenSearchModelManager
 from opensearch.open_search_client import OpenSearchClient
 
 OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
+current_dir = os.path.dirname(os.path.abspath(__file__))
+output_path = os.path.join(current_dir, "../resources/output.json")
 
 
 class OpenSearchManager:
@@ -57,25 +60,23 @@ class OpenSearchManager:
         data_manager = OpenSearchDataManager(self.opensearch_client)
         model_manager = OpenSearchModelManager(self.opensearch_client)
 
-        sentence_transformer_model_id = model_manager.register_and_deploy_ml_model(self.sentence_transformer_model_payload,
-                                                                                   self.sentence_transformer_model_name)
+        sentence_transformer_model_id = model_manager.register_and_deploy_ml_model(
+            self.sentence_transformer_model_payload,
+            self.sentence_transformer_model_name)
         model_manager.put_ingest_pipeline(sentence_transformer_model_id)
 
         new_index_name = data_manager.create_products_index(self.index_name)
-        data_manager.upload_data_file(read_clean_and_aggregate_tab("../resources/outputtest.json"), new_index_name,
+        data_manager.upload_data_file(read_clean_and_aggregate_tab(output_path), new_index_name,
                                       self.field_id)
+        return new_index_name
 
-        self.upload_and_query_model(new_index_name)
-
-    def upload_and_query_model(self, new_index_name="products_search_index_20250321175941",
-                               question="Bonjour, je souhaite acheter un Câble U1000 R2V 5G1,5 mm² 50 m"):
+    def upload_model(self, new_index_name):
         # Opensearch model manager
         model_manager = OpenSearchModelManager(self.opensearch_client)
-
-        sentence_transformer_model_id = model_manager.register_and_deploy_ml_model(self.sentence_transformer_model_payload,
-                                                                                   self.sentence_transformer_model_name)
+        sentence_transformer_model_id = model_manager.register_and_deploy_ml_model(
+            self.sentence_transformer_model_payload,
+            self.sentence_transformer_model_name)
         model_manager.put_ingest_pipeline(sentence_transformer_model_id)
-
         connector_id = model_manager.create_connector(self.gpt_model_name, OPEN_AI_KEY)
         print("Connector id " + connector_id)
         gpt_model_payload = {
@@ -89,6 +90,23 @@ class OpenSearchManager:
         agent_id = model_manager.register_agent("gpt4o-mini-agent", new_index_name, sentence_transformer_model_id,
                                                 gpt_model_id)
         print("Agent id " + agent_id)
+        return agent_id
+
+    def upload_and_query_model(self, new_index_name, question):
+        agent_id = self.upload_model(new_index_name)
+        model_manager = OpenSearchModelManager(self.opensearch_client)
         inference = model_manager.query_agent(agent_id, question)
         print(inference)
         return json.loads(inference["inference_results"][0]["output"][0]["result"])["choices"][0]["message"]["content"]
+
+
+if __name__ == "__main__":
+    config = configparser.ConfigParser()
+    config.read("../config.ini")
+    config_opensearch = config["OPENSEARCH"]
+    config_resources = config["RESOURCES"]
+    config_models = config["MODELS"]
+    open_search_manager = OpenSearchManager(config_opensearch, config_resources, config_models)
+    index_name = open_search_manager.upload_data()
+    open_search_manager.upload_and_query_model(new_index_name=index_name,
+                                               question="Bonjour, je souhaite acheter un Câble U1000 R2V 5G1,5 mm² 50 m")

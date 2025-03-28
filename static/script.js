@@ -105,3 +105,27 @@ function opensearch_button() {
     });
 });
 }
+
+function create_and_deploy_agent() {
+    let logOutput = document.getElementById("log-agent-output");
+    console.log(logOutput.style.display);
+
+    if (logOutput.style.display === "none" || logOutput.style.display === "") {
+        logOutput.style.display = "block";
+    } else {
+        logOutput.style.display = "none";
+    }
+
+    document.getElementById("create-agent").addEventListener("click", function() {
+    fetch("/create_and_deploy_agent", {
+        method: "POST",
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("log-agent-output").innerText = JSON.stringify(data, null, 2);
+    })
+    .catch(error => {
+        document.getElementById("log-agent-output").innerText = "Erreur : " + error;
+    });
+});
+}
