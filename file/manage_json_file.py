@@ -62,6 +62,6 @@ def read_clean_and_aggregate_tab(path):
     json_clean = __clean_json(__read_json_return_from_result_list(path))
 
     for hit in json_clean:
-        __aggregate_fields(hit, ["_id"], "text")
+        __aggregate_fields(hit, [], "text")
 
     return json_clean

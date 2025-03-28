@@ -99,6 +99,12 @@ class OpenSearchManager:
         print(inference)
         return json.loads(inference["inference_results"][0]["output"][0]["result"])["choices"][0]["message"]["content"]
 
+    def query_model(self, agent_id, question):
+        model_manager = OpenSearchModelManager(self.opensearch_client)
+        inference = model_manager.query_agent(agent_id, question)
+        print(inference)
+        return json.loads(inference["inference_results"][0]["output"][0]["result"])["choices"][0]["message"]["content"]
+
 
 if __name__ == "__main__":
     config = configparser.ConfigParser()
