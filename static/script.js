@@ -4,6 +4,10 @@ function checkEnter(event) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", elastic_button);
+document.addEventListener("DOMContentLoaded", opensearch_button);
+document.addEventListener("DOMContentLoaded", create_and_deploy_agent);
+
 function sendMessage() {
     let userInput = document.getElementById("user-input");
     let chatBox = document.getElementById("chat-box");
@@ -50,7 +54,7 @@ async function fetchResponse(userText) {
         });
 
         let data = await response.json();
-         if (data.error) {
+        if (data.error) {
             return { message: data.error, isError: true };
         }
         return { message: data.response, isError: false };
@@ -63,61 +67,74 @@ async function fetchResponse(userText) {
 // Effet machine à écrire
 function typeWriter(element, text, i = 0, step = 3, speed = 20) {
     if (i < text.length) {
-        element.textContent += text.substring(i, i + step); // Ajoute plusieurs caractères à la fois
+        element.textContent += text.substring(i, i + step);
         setTimeout(() => typeWriter(element, text, i + step, step, speed), speed);
     }
 }
 
 function elastic_button() {
     let logOutput = document.getElementById("log-output");
-    console.log(logOutput.style.display);
+    let fetchButton = document.getElementById("fetch-data");
 
-    document.getElementById("fetch-data").addEventListener("click", function() {
-    fetch("/download_from_elastic", {
-        method: "GET"
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("log-output").innerText = JSON.stringify(data, null, 2);
-    })
-    .catch(error => {
-        document.getElementById("log-output").innerText = "Erreur : " + error;
+    fetchButton.replaceWith(fetchButton.cloneNode(true));
+    fetchButton = document.getElementById("fetch-data");
+
+    fetchButton.addEventListener("click", function() {
+        logOutput.innerText = "Chargement...";
+
+        fetch("/download_from_elastic", {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(data => {
+            logOutput.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            logOutput.innerText = "Erreur : " + error;
+        });
     });
-});
 }
 
 function opensearch_button() {
     let logOutput = document.getElementById("log-output");
-    console.log(logOutput.style.display);
+    let fetchButton = document.getElementById("upload-data");
 
-    document.getElementById("upload-data").addEventListener("click", function() {
-    fetch("/upload-data", {
-        method: "GET"
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("log-output").innerText = JSON.stringify(data, null, 2);
-    })
-    .catch(error => {
-        document.getElementById("log-output").innerText = "Erreur : " + error;
+    fetchButton.replaceWith(fetchButton.cloneNode(true));
+    fetchButton = document.getElementById("upload-data");
+
+    fetchButton.addEventListener("click", function() {
+        logOutput.innerText = "Chargement...";
+        fetch("/upload_to_opensearch", {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(data => {
+            logOutput.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            logOutput.innerText = "Erreur : " + error;
+        });
     });
-});
 }
 
 function create_and_deploy_agent() {
     let logOutput = document.getElementById("log-output");
-    console.log(logOutput.style.display);
+    let fetchButton = document.getElementById("create-agent");
+
+    fetchButton.replaceWith(fetchButton.cloneNode(true));
+    fetchButton = document.getElementById("create-agent");
 
     document.getElementById("create-agent").addEventListener("click", function() {
+        logOutput.innerText = "Chargement...";
     fetch("/create_and_deploy_agent", {
         method: "POST",
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("log-output").innerText = JSON.stringify(data, null, 2);
+        logOutput.innerText = JSON.stringify(data, null, 2);
     })
     .catch(error => {
-        document.getElementById("log-agent-output").innerText = "Erreur : " + error;
+        logOutput.innerText = "Erreur : " + error;
     });
 });
 }

@@ -51,7 +51,7 @@ class OpenSearchManager:
         Deploy the sentence transformer model (from config.ini)
         Put the ingest pipeline
         Create a new index
-        Upload the data from the file outputtest.json
+        Upload the data from the file output.json
 
         :return:
         """
