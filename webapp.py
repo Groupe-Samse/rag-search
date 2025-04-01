@@ -21,8 +21,15 @@ elasticsearch_query = json.loads(config["ELASTICSEARCH"].get("QUERY"))
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
-elastic_client = ElasticSearchClient(config["ELASTICSEARCH"])
-opensearch_manager = OpenSearchManager(config["OPENSEARCH"], config["RESOURCES"], config["MODELS"])
+opensearch_manager = None
+elastic_client = None
+
+try:
+    elastic_client = ElasticSearchClient(config["ELASTICSEARCH"])
+    opensearch_manager = OpenSearchManager(config["OPENSEARCH"], config["RESOURCES"], config["MODELS"])
+except Exception as e:
+    print(f"Error initializing clients: {e}")
+
 override_index_name = "products_search_index_20250321175941"
 global_agent_id = None
 global_index_name = None
@@ -35,6 +42,9 @@ def home():
 
 @app.route("/download_from_elastic", methods=["GET"])
 def download_from_elastic():
+    if elastic_client is None:
+        return jsonify({"error": "Elastic search not found, please launch an instance."})
+
     return jsonify({"response": elastic_client.import_products_data(elasticsearch_index_name,
                                                                     elasticsearch_source_fields,
                                                                     elasticsearch_size_limit,
@@ -43,6 +53,8 @@ def download_from_elastic():
 
 @app.route("/upload_to_opensearch", methods=["GET"])
 def upload_to_opensearch():
+    if opensearch_manager is None:
+        return jsonify({"error": "Open search not found, please launch an instance."})
     global global_index_name
     global_index_name = opensearch_manager.upload_data()
     return jsonify({"response": global_index_name})
@@ -50,6 +62,8 @@ def upload_to_opensearch():
 
 @app.route("/create_and_deploy_agent", methods=["POST"])
 def create_and_deploy_agent():
+    if opensearch_manager is None:
+        return jsonify({"error": "Open search not found, please launch an instance."})
     global global_agent_id
     if global_index_name is None:
         global_agent_id = opensearch_manager.upload_model(override_index_name)
@@ -61,8 +75,11 @@ def create_and_deploy_agent():
 @app.route("/get_response", methods=["POST"])
 def get_response():
     user_message = request.json["message"]
+
+    if opensearch_manager is None:
+        return jsonify({"error": "Open search not found, please launch an instance."})
     if global_agent_id is None:
-        return jsonify({"error": "Agent ID is not set, please deploy the agent first."}), 400
+        return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
 
     response = opensearch_manager.query_model(global_agent_id, question=user_message)
     return jsonify({"response": response})

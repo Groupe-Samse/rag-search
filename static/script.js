@@ -25,10 +25,17 @@ function sendMessage() {
         chatBox.appendChild(botMessage);
 
         fetchResponse(userText).then(response => {
-            typeWriter(botMessage, response);
+            let messageText = response.message;
+            let isError = response.isError;
+
+            if (isError) {
+                botMessage.classList.add("error");
+            }
+
+            typeWriter(botMessage, messageText);
         });
 
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll vers le bas
+        chatBox.scrollTop = chatBox.scrollHeight;
     }, 1000);
 
     userInput.value = "";
@@ -43,7 +50,10 @@ async function fetchResponse(userText) {
         });
 
         let data = await response.json();
-        return data.response;
+         if (data.error) {
+            return { message: data.error, isError: true };
+        }
+        return { message: data.response, isError: false };
     } catch (error) {
         console.error("Erreur de connexion :", error);
         return "Erreur de connexion au serveur.";
@@ -62,12 +72,6 @@ function elastic_button() {
     let logOutput = document.getElementById("log-output");
     console.log(logOutput.style.display);
 
-    if (logOutput.style.display === "none" || logOutput.style.display === "") {
-        logOutput.style.display = "block";
-    } else {
-        logOutput.style.display = "none";
-    }
-
     document.getElementById("fetch-data").addEventListener("click", function() {
     fetch("/download_from_elastic", {
         method: "GET"
@@ -83,38 +87,26 @@ function elastic_button() {
 }
 
 function opensearch_button() {
-    let logOutput = document.getElementById("log-opensearch-output");
+    let logOutput = document.getElementById("log-output");
     console.log(logOutput.style.display);
 
-    if (logOutput.style.display === "none" || logOutput.style.display === "") {
-        logOutput.style.display = "block";
-    } else {
-        logOutput.style.display = "none";
-    }
-
     document.getElementById("upload-data").addEventListener("click", function() {
-    fetch("/upload_to_opensearch", {
+    fetch("/upload-data", {
         method: "GET"
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("log-opensearch-output").innerText = JSON.stringify(data, null, 2);
+        document.getElementById("log-output").innerText = JSON.stringify(data, null, 2);
     })
     .catch(error => {
-        document.getElementById("log-opensearch-output").innerText = "Erreur : " + error;
+        document.getElementById("log-output").innerText = "Erreur : " + error;
     });
 });
 }
 
 function create_and_deploy_agent() {
-    let logOutput = document.getElementById("log-agent-output");
+    let logOutput = document.getElementById("log-output");
     console.log(logOutput.style.display);
-
-    if (logOutput.style.display === "none" || logOutput.style.display === "") {
-        logOutput.style.display = "block";
-    } else {
-        logOutput.style.display = "none";
-    }
 
     document.getElementById("create-agent").addEventListener("click", function() {
     fetch("/create_and_deploy_agent", {
@@ -122,7 +114,7 @@ function create_and_deploy_agent() {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("log-agent-output").innerText = JSON.stringify(data, null, 2);
+        document.getElementById("log-output").innerText = JSON.stringify(data, null, 2);
     })
     .catch(error => {
         document.getElementById("log-agent-output").innerText = "Erreur : " + error;
