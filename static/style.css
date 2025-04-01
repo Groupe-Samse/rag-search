@@ -121,7 +121,7 @@ button:hover {
     left: 80px;
 }
 
-#override-prompt {
+#create-agent {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -137,22 +137,6 @@ button:hover {
     left: 140px;
 }
 
-#create-agent {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #ffcc00;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    position: absolute;
-    top: 20px;
-    left: 200px;
-}
-
 #fetch-data:hover {
     background-color: #666;
 }
@@ -162,10 +146,6 @@ button:hover {
 }
 
 #upload-data:hover {
-    background-color: #666;
-}
-
-#override-prompt:hover {
     background-color: #666;
 }
 
