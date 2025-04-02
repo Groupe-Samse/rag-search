@@ -29,7 +29,10 @@ class ElasticSearchClient:
             "size": self.batch_size,
             "query": query
         }
-        response = self.client.search(index=elastic_index_name, body=query, scroll="2m")
+        try:
+            response = self.client.search(index=elastic_index_name, body=query, scroll="2m")
+        except Exception as e:
+            return f"Error while searching index in elastic search: {e}"
 
         scroll_id = response["_scroll_id"]
         hits = response["hits"]["hits"]
