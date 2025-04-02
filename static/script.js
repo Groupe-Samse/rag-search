@@ -7,6 +7,7 @@ function checkEnter(event) {
 document.addEventListener("DOMContentLoaded", elastic_button);
 document.addEventListener("DOMContentLoaded", opensearch_button);
 document.addEventListener("DOMContentLoaded", create_and_deploy_agent);
+document.addEventListener("DOMContentLoaded", delete_agent);
 
 function sendMessage() {
     let userInput = document.getElementById("user-input");
@@ -128,6 +129,28 @@ function create_and_deploy_agent() {
         logOutput.innerText = "Chargement...";
     fetch("/create_and_deploy_agent", {
         method: "POST",
+    })
+    .then(response => response.json())
+    .then(data => {
+        logOutput.innerText = JSON.stringify(data, null, 2);
+    })
+    .catch(error => {
+        logOutput.innerText = "Erreur : " + error;
+    });
+});
+}
+
+function delete_agent() {
+    let logOutput = document.getElementById("log-output");
+    let fetchButton = document.getElementById("delete-agent");
+
+    fetchButton.replaceWith(fetchButton.cloneNode(true));
+    fetchButton = document.getElementById("delete-agent");
+
+    document.getElementById("delete-agent").addEventListener("click", function() {
+        logOutput.innerText = "Chargement...";
+    fetch("delete_agent", {
+        method: "DELETE",
     })
     .then(response => response.json())
     .then(data => {

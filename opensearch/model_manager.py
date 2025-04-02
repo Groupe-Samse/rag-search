@@ -16,7 +16,7 @@ class OpenSearchModelManager:
         response = self.client.transport.perform_request(
             method="GET",
             url=endpoint,
-            body={"query": {"match": {"name": model_name}}}
+            body={"query": {"match": {"name.keyword": model_name}}}
         )
         return response["hits"]["hits"]
 
@@ -48,7 +48,7 @@ class OpenSearchModelManager:
         response = self.client.transport.perform_request(
             method="GET",
             url=endpoint,
-            body={"query": {"match": {"name": connector_name}}}
+            body={"query": {"match": {"name.keyword": connector_name}}}
         )
         return response["hits"]["hits"]
 
@@ -63,7 +63,7 @@ class OpenSearchModelManager:
         response = self.client.transport.perform_request(
             method="GET",
             url=endpoint,
-            body={"query": {"match": {"name": agent_name}}}
+            body={"query": {"match": {"name.keyword": agent_name}}}
         )
         return response["hits"]["hits"]
 
@@ -78,6 +78,7 @@ class OpenSearchModelManager:
         existing_model = self.__search_model(model_name)
 
         if len(existing_model) > 0:
+            print(f"Model {model_name} already exists")
             if "model_id" in existing_model[0]["_source"]:
                 return existing_model[0]["_source"]["model_id"]
             return existing_model[0]["_id"]
@@ -91,7 +92,7 @@ class OpenSearchModelManager:
         task_id = response["task_id"]
 
         while self.__get_model_id_from_task_id(task_id) is None:
-            print("Waiting for model to be ready...")
+            print(f"Waiting for model {model_name} to be ready...")
             time.sleep(1)
         return self.__get_model_id_from_task_id(task_id)
 
@@ -124,11 +125,11 @@ class OpenSearchModelManager:
         :param openai_key: openai key
         :return: connector id
         """
-        connector_name = "OpenAI Mini Chat Connector"
+        connector_name = f"OpenAI {model_name} Connector"
 
         existing_connector = self.__search_connector(connector_name)
         if len(existing_connector) > 0:
-            print("Connector already exists")
+            print(f"Connector {connector_name} already exists")
             return existing_connector[0]["_id"]
 
         connector_config = {
@@ -223,9 +224,20 @@ class OpenSearchModelManager:
         """
         endpoint = "/_plugins/_ml/agents/" + agent_id + "/_execute"
 
-        response = self.client.transport.perform_request(
+        return self.client.transport.perform_request(
             method="POST",
             url=endpoint,
             body={"parameters": {"question": question}}
         )
-        return response
+
+    def delete_agent(self, agent_id):
+        """
+        Delete an agent by id
+
+        :param agent_id: agent id
+        """
+        endpoint = "/_plugins/_ml/agents/" + agent_id
+        return self.client.transport.perform_request(
+            method="DELETE",
+            url=endpoint
+        )

@@ -11,21 +11,27 @@
 <div id="background"></div>
 
 <div class="command-container">
-    <button id="fetch-data" onclick="elastic_button()" title="Télécharger données venant d'une base elastic">
+    <button id="fetch-data" onclick="elastic_button()" title="Télécharger données venant d'une base Elasticsearch">
         <img src="static/assets/elastic.svg" alt="Télécharger données elastic" class="icon">
     </button>
     <div id="log-output" class="log-output"></div>
 </div>
 
 <div class="command-container">
-    <button id="upload-data" onclick="opensearch_button()" title="Uploader données dans opensearch">
+    <button id="upload-data" onclick="opensearch_button()" title="Uploader données dans Opensearch">
         <img src="static/assets/opensearch.png" alt="Uploader données dans opensearch" class="icon">
     </button>
 </div>
 
 <div class="command-container">
-    <button id="create-agent" onclick="create_and_deploy_agent()" title="Créer un agent dans opensearch">
+    <button id="create-agent" onclick="create_and_deploy_agent()" title="Créer un agent dans Opensearch">
         <img src="static/assets/data_server.webp" alt="Créer un agent dans opensearch" class="icon">
+    </button>
+</div>
+
+<div class="command-container">
+    <button id="delete-agent" onclick="delete_agent()" title="Supprimer l'agent dans Opensearch">
+        <img src="static/assets/data_server_delete.webp" alt="Supprimer l'agent dans Opensearch" class="icon">
     </button>
 </div>
 

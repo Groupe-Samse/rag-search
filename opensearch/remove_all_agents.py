@@ -32,4 +32,4 @@ if response.status_code == 200:
                 print(f"Error when deleting agent {agent_id}: {delete_response.text}")
 
 else:
-    print(f"Erreur when getting agents : {response.text}")
+    print(f"Error when getting agents : {response.text}")

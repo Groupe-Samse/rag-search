@@ -87,7 +87,7 @@ class OpenSearchManager:
         }
         gpt_model_id = model_manager.register_and_deploy_ml_model(gpt_model_payload, self.gpt_model_name)
         print("GPT model id " + gpt_model_id)
-        agent_id = model_manager.register_agent("gpt4o-mini-agent", new_index_name, sentence_transformer_model_id,
+        agent_id = model_manager.register_agent(f"{gpt_model_id}-agent", new_index_name, sentence_transformer_model_id,
                                                 gpt_model_id)
         print("Agent id " + agent_id)
         return agent_id
@@ -104,6 +104,14 @@ class OpenSearchManager:
         inference = model_manager.query_agent(agent_id, question)
         print(inference)
         return json.loads(inference["inference_results"][0]["output"][0]["result"])["choices"][0]["message"]["content"]
+
+    def delete_agent(self, agent_id):
+        model_manager = OpenSearchModelManager(self.opensearch_client)
+        try:
+            model_manager.delete_agent(agent_id)
+        except Exception as e:
+            return f"Exception occurred while deleting agent {agent_id}: {e}"
+        return f"Agent {agent_id} deleted successfully."
 
 
 if __name__ == "__main__":

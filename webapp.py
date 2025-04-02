@@ -72,17 +72,23 @@ def create_and_deploy_agent():
     return jsonify({"response": global_agent_id})
 
 
+@app.route("/delete_agent", methods=["DELETE"])
+def delete_agent():
+    if opensearch_manager is None:
+        return jsonify({"error": "Open search not found, please launch an instance."})
+    if global_agent_id is None:
+        return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
+    return jsonify({"response": opensearch_manager.delete_agent(global_agent_id)})
+
+
 @app.route("/get_response", methods=["POST"])
 def get_response():
-    user_message = request.json["message"]
-
     if opensearch_manager is None:
         return jsonify({"error": "Open search not found, please launch an instance."})
     if global_agent_id is None:
         return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
 
-    response = opensearch_manager.query_model(global_agent_id, question=user_message)
-    return jsonify({"response": response})
+    return jsonify({"response": opensearch_manager.query_model(global_agent_id, question=request.json["message"])})
 
 
 if __name__ == "__main__":
