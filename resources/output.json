@@ -1,0 +1,122 @@
+[
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "420331",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Charnieres 110 ° avec amortisseur par 2 OFITRES",
+            "usageUtilite": "Charnière amortie de 110º.",
+            "plusProduit": "Fermeture en douceur et grande durabilité.",
+            "marque": "OFITRES",
+            "descriptifComplementaire": ""
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "389690",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Adaptateur fiche \"F\" femelle/fiche 9,52 mm femelle SEDEA",
+            "usageUtilite": "Adaptateur permettant de connecter une fiche \"F\" mâle sur un connecteur coaxial mâle 9.52mm.",
+            "plusProduit": "",
+            "marque": "SEDEA",
+            "descriptifComplementaire": ""
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "389691",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Adaptateur fiche \"F\" femelle/fiche 9,52 mm mâle SEDEA",
+            "usageUtilite": "Adaptateur permettant de connecter une fiche \"F\" mâle sur un connecteur coaxial femelle 9.52mm.",
+            "plusProduit": "",
+            "marque": "SEDEA",
+            "descriptifComplementaire": ""
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "420833",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Système d'ouverture à piston OFITRES",
+            "usageUtilite": "Soutenir l'ouverture et fermeture des portes relevables.",
+            "plusProduit": "Très résistant.",
+            "marque": "OFITRES",
+            "descriptifComplementaire": ""
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "1765726",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "TAILLE HAIES 36V 60 CM RY36HT60A-0  SANS BAT",
+            "usageUtilite": "Le <trong>taille-haies 36V MAX POWER </strong>combine puissance, précision et praticité, idéal pour entretenir vos haies moyennes, profondes et denses. Alimenté par une batterie Lithium+ 36V MAX POWER, compatible avec tous les outils de la gamme 36V Ryobi®, il offre une autonomie optimale pour des travaux prolongés et <strong>des performances comparables aux outils thermiques.</strong><br><br>Les lames double action à affûtage diamanté offrent une coupe fluide et propre, tandis que sa fonction scie permet de traiter les branches les plus épaisses en toute simplicité. Cette combinaison de précision et de puissance rend les travaux de jardinage plus rapides et efficaces.<br><br>Pensé pour le confort, il est doté d'une poignée ergonomique avec une gâchette d'accélération large, offrant une prise en main ferme et une maîtrise parfaite de l'outil. En plus, le collecteur HedgeSweepTM intégré facilite l'évacuation des coupes, garantissant un nettoyage simple et rapide.",
+            "plusProduit": "Poignée ergonomique<br>Butée de protection <br>Lames double action<br>Double affûtage des dents au diamant",
+            "marque": "RYOBI",
+            "descriptifComplementaire": "La référence du produit est RY36HT60A-0"
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "592038",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Tuyau d'aspiration 7 m diamètre 32 mm pour pompe et ses accessoires 1' 26/34 RAINPLAY",
+            "usageUtilite": "Ce <strong>kit d'aspiration pour pompe de surface Ø 32 mm extérieur</strong> vous permettra de puiser l'eau au fond de votre puits (jusqu'à 7 mètres) et de la remonter jusqu'à votre pompe de surface, ou votre surpresseur ..  pour arroser votre jardin ou remplir votre bassin. <br><br>Grâce à son tuyau PVC annelé souple et très résistant à la pression il ne s'écrasera pas lors de la pression qui sera exercée lors du pompage. Ce qui vous permettra de conserver ce tuyau plus longtemps !<br><br>Ce <strong>tuyau d'aspiration</strong> est équipé d'un raccord type mâle et d'un clapet crépine en plastique qui filtrera les impuretés de l'eau avant d'arriver dans le moteur de la pompe (petits cailloux, feuilles ... ) <br>Le raccord ou écrou à visser étant tournant vous aurez la facilité pour le visser sur votre pompe.<br><br>Les éléments sont sertis au tuyau afin de parfaire leur assemblage. <br><br>Parfaitement étanche, ce <strong>kit d'aspiration</strong> est le garant du bon fonctionnement de votre pompe.<br><br>Universel, il s'adapte sur toutes les pompes de surface et groupes de surpression en  sortie 1\" (26/34) <br><br><br>",
+            "plusProduit": "Les avantages de ce produit sont : <br>Ensemble complet: tuyau, crépine et raccord<br>Pour aspiration jusqu'à 7 mètres de profondeur<br>Adapté pour l'aspiration de l'eau  <br>",
+            "marque": "RAINPLAY",
+            "descriptifComplementaire": ""
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "590638",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Rouleau de laine de verre GR32 pour mur - Épaisseur 120 mm - l.1,20 x L.2,70 m ISOVER",
+            "usageUtilite": "<strong> L'isolant murs </strong> Isover est un rouleau de laine de verre revêtu d'un surfaçage en kraft.<br>Avec son lambda 32, l'isolant murs Isover présente de bonnes performances thermo-acoustiques.<br><br>Il est destiné à assurer l'isolation thermique et acoustique des murs par l'intérieur, des cloisons et des combles aménagés sous ossature métallique.",
+            "plusProduit": "<ul><li> Le rouleau tient debout tout seul grâce à son excellente tenue mécanique, pour une manipulation aisée par une seule personne</li><br><li>La laine souple reprend parfaitement son épaisseur après ouverture, pour assurer un bon calfeutrement entre le mur et le parement, du sol au plafond ! Elle évite les ponts thermiques</li><br><li>Le rouleau s'adapte à tous les murs, même aux plus irréguliers</li><br><li>Les prises de mesures et découpes sont facilités grâce au quadrillage sur le revêtement kraft</li></ul>",
+            "marque": "ISOVER",
+            "descriptifComplementaire": "Référence de la laine de verre isolant murs rouleau kraft 2,7 x 1,2 m épaisseur 100 mm Isover ISOVER : 13100<br><br>Référence de la laine de verre isolant murs rouleau kraft 2,7 x 1,2 m épaisseur 120 mm Isover : 13109<br><br>Référence de la laine de verre isolant murs rouleau kraft 2,7 x 1,2 m épaisseur 140 mm Isover : 14000<br><br>Référence de la laine de verre isolant murs rouleau kraft 2,7 x 1,2 m épaisseur 160 mm Isover : 14331"
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "1756030",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Fenêtre PVC blanc 2 vantaux H.95 x l.100 cm CLOSY",
+            "usageUtilite": "Cette <strong>fenêtre en PVC blanc</strong> permet la fermeture et l'isolation des murs périphériques d'une habitation.",
+            "plusProduit": "",
+            "marque": "CLOSY",
+            "descriptifComplementaire": "4/20/4 fe Arg & WE"
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "1756031",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Fenêtre PVC blanc 2 vantaux H.125 x l.100 cm CLOSY",
+            "usageUtilite": "Cette <strong>fenêtre en PVC blanc</strong> permet la fermeture et l'isolation des murs périphériques d'une habitation.",
+            "plusProduit": "",
+            "marque": "CLOSY",
+            "descriptifComplementaire": "4/20/4 fe Arg & WE"
+        }
+    },
+    {
+        "_index": "products_search_index-20250401_070828",
+        "_id": "1756021",
+        "_score": 2.0,
+        "_source": {
+            "libelleProduit": "Fenêtre PVC blanc 2 vantaux oscillo-battant H.175 x l.120 cm CLOSY",
+            "usageUtilite": "Cette <strong>fenêtre en PVC blanc</strong> permet la fermeture et l'isolation des murs périphériques d'une habitation.",
+            "plusProduit": "Option oscillo-battant incluse",
+            "marque": "CLOSY",
+            "descriptifComplementaire": "4/20/4 fe Arg & WE"
+        }
+    }
+]
