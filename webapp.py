@@ -65,10 +65,22 @@ def create_and_deploy_agent():
     if opensearch_manager is None:
         return jsonify({"error": "Open search not found, please launch an instance."})
     global global_agent_id
-    if global_index_name is None:
-        global_agent_id = opensearch_manager.upload_model(override_index_name)
-    else:
-        global_agent_id = opensearch_manager.upload_model(global_index_name)
+    global_agent_id = opensearch_manager.upload_model(
+        override_index_name if global_index_name is None else global_index_name)
+
+    return jsonify({"response": global_agent_id})
+
+
+@app.route("/override_prompt", methods=["POST"])
+def override_prompt():
+    if opensearch_manager is None:
+        return jsonify({"error": "Open search not found, please launch an instance."})
+    global global_agent_id
+
+    global_agent_id = opensearch_manager.upload_model(
+        override_index_name if global_index_name is None else global_index_name,
+        "agent_override",
+        request.json["prompt"])
     return jsonify({"response": global_agent_id})
 
 
@@ -87,7 +99,6 @@ def get_response():
         return jsonify({"error": "Open search not found, please launch an instance."})
     if global_agent_id is None:
         return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
-
     return jsonify({"response": opensearch_manager.query_model(global_agent_id, question=request.json["message"])})
 
 

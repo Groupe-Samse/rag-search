@@ -32,7 +32,7 @@ class OpenSearchManager:
         print("La clé API OPEN_AI_KEY n'est pas définie.")
         sys.exit(1)
     else:
-        print("Clé API chargée avec succès.")
+        print("Open API key loaded with success")
 
     def __print_config(self):
         print("Opensearch host: " + self.host)
@@ -70,7 +70,7 @@ class OpenSearchManager:
                                       self.field_id)
         return new_index_name
 
-    def upload_model(self, new_index_name):
+    def upload_model(self, new_index_name, agent_profile="default", override_prompt=None):
         # Opensearch model manager
         model_manager = OpenSearchModelManager(self.opensearch_client)
         sentence_transformer_model_id = model_manager.register_and_deploy_ml_model(
@@ -87,13 +87,15 @@ class OpenSearchManager:
         }
         gpt_model_id = model_manager.register_and_deploy_ml_model(gpt_model_payload, self.gpt_model_name)
         print("GPT model id " + gpt_model_id)
-        agent_id = model_manager.register_agent(f"{gpt_model_id}-agent", new_index_name, sentence_transformer_model_id,
-                                                gpt_model_id)
+        agent_id = model_manager.register_agent(f"{self.gpt_model_name}-{agent_profile}-agent-{new_index_name}",
+                                                new_index_name,
+                                                sentence_transformer_model_id,
+                                                gpt_model_id, override_prompt)
         print("Agent id " + agent_id)
         return agent_id
 
-    def upload_and_query_model(self, new_index_name, question):
-        agent_id = self.upload_model(new_index_name)
+    def upload_and_query_model(self, new_index_name, question, agent_profile="default", override_prompt=None):
+        agent_id = self.upload_model(new_index_name, agent_profile, override_prompt)
         model_manager = OpenSearchModelManager(self.opensearch_client)
         inference = model_manager.query_agent(agent_id, question)
         print(inference)
@@ -123,4 +125,6 @@ if __name__ == "__main__":
     open_search_manager = OpenSearchManager(config_opensearch, config_resources, config_models)
     index_name = open_search_manager.upload_data()
     open_search_manager.upload_and_query_model(new_index_name=index_name,
-                                               question="Bonjour, je souhaite acheter un Câble U1000 R2V 5G1,5 mm² 50 m")
+                                               question="Bonjour, je souhaite soutenir l'ouverture et fermeture des portes relevables",
+                                               agent_profile="default",
+                                                override_prompt="")

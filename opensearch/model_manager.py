@@ -161,7 +161,7 @@ class OpenSearchModelManager:
         response = self.client.transport.perform_request(method="POST", url=endpoint, body=connector_config)
         return response["connector_id"]
 
-    def register_agent(self, agent_name, index_name, sentence_transformer_model_id, gpt_model_id):
+    def register_agent(self, agent_name, index_name, sentence_transformer_model_id, gpt_model_id, override_prompt=None):
         """
         Register an agent, if it already exists, return the existing agent id
 
@@ -169,6 +169,7 @@ class OpenSearchModelManager:
         :param index_name: index name
         :param sentence_transformer_model_id: sentence transformer model id
         :param gpt_model_id: gpt model id
+        :param override_prompt: override prompt
         :return: agent id
         """
         agent = self.__search_agent(agent_name)
@@ -176,9 +177,18 @@ class OpenSearchModelManager:
             print("Agent already exists")
             return agent[0]["_id"]
 
-        messages = """ [ { "role": "system",
-                "content": "Tu es un expert en vente de produits de bricolage, spécialisé dans le conseil personnalisé aux clients et tu utilises des réponses provenant d'une recherche pour fournir des recommandations précises. Mon contexte est que je travaille dans une enseigne de bricolage et je souhaite aider mes clients à trouver les produits adaptés à leurs projets. Tu vas jouer le rôle d'un vendeur de bricolage expérimenté, répondant uniquement si une réponse pertinente est disponible à partir de la recherche sémantique. Voici les étapes à suivre : 1. Si une réponse est fournie en entrée, afficher l'id produit et analyser les informations pour comprendre le besoin du client 2. Présenter le ou les produits recommandés en décrivant leurs principales caractéristiques et avantages spécifiques au projet du client. 3. Expliquer en quoi ces produits sont les plus adaptés en fonction des critères fournis, comme la durabilité, le prix ou l'efficacité. 4. Offrir des conseils supplémentaires, comme des accessoires ou outils complémentaires, uniquement si la recherche sémantique propose des options pertinentes. 5. Si aucune information ne correspond exactement au besoin du client, indiquer poliment qu'aucun produit spécifique n’est disponible dans cette catégorie. Le résultat attendu est une réponse ciblée et utile pour le client, uniquement fournie si une recommandation pertinente existe via la recherche sémantique. Selon les réponses dans ce contexte, réponds au mieux à l'utilisateur : ${parameters.VectorDBTool.output}" },
-                { "role": "user", "content": "${parameters.question}" }]"""
+        default_prompt = """Tu es un expert en vente de produits de bricolage, spécialisé dans le conseil personnalisé aux clients et tu utilises des réponses provenant d'une recherche pour fournir des recommandations précises. Mon contexte est que je travaille dans une enseigne de bricolage et je souhaite aider mes clients à trouver les produits adaptés à leurs projets. Tu vas jouer le rôle d'un vendeur de bricolage expérimenté, répondant uniquement si une réponse pertinente est disponible à partir de la recherche sémantique. Voici les étapes à suivre : 1. Si une réponse est fournie en entrée, afficher l'id produit et analyser les informations pour comprendre le besoin du client 2. Présenter le ou les produits recommandés en décrivant leurs principales caractéristiques et avantages spécifiques au projet du client. 3. Expliquer en quoi ces produits sont les plus adaptés en fonction des critères fournis, comme la durabilité, le prix ou l'efficacité. 4. Offrir des conseils supplémentaires, comme des accessoires ou outils complémentaires, uniquement si la recherche sémantique propose des options pertinentes. 5. Si aucune information ne correspond exactement au besoin du client, indiquer poliment qu'aucun produit spécifique n’est disponible dans cette catégorie. Le résultat attendu est une réponse ciblée et utile pour le client, uniquement fournie si une recommandation pertinente existe via la recherche sémantique. Selon les réponses dans ce contexte, réponds au mieux à l'utilisateur :"""
+        prompt = override_prompt if override_prompt else default_prompt
+
+        vector_db_output = "${parameters.VectorDBTool.output}"
+        user_content = "${parameters.question}"
+
+        full_system_content = prompt + " " + vector_db_output
+
+        messages = f"""[
+            {{"role": "system", "content": "{full_system_content}"}},
+            {{"role": "user", "content": "{user_content}"}}
+        ]"""
 
         agent_config = {
             "name": agent_name,
@@ -195,7 +205,7 @@ class OpenSearchModelManager:
                     "index": index_name,
                     "embedding_field": "text_embedding",
                     "source_field": ["text"],
-                    "k": 1,
+                    "k": 10,
                     "input": "${parameters.question}"
                 }
             },
@@ -227,7 +237,8 @@ class OpenSearchModelManager:
         return self.client.transport.perform_request(
             method="POST",
             url=endpoint,
-            body={"parameters": {"question": question}}
+            body={"parameters": {"question": question}},
+            timeout=60
         )
 
     def delete_agent(self, agent_id):

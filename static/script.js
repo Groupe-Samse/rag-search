@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", elastic_button);
 document.addEventListener("DOMContentLoaded", opensearch_button);
 document.addEventListener("DOMContentLoaded", create_and_deploy_agent);
 document.addEventListener("DOMContentLoaded", delete_agent);
+document.addEventListener("DOMContentLoaded", override_prompt);
 
 function sendMessage() {
     let userInput = document.getElementById("user-input");
@@ -15,7 +16,6 @@ function sendMessage() {
 
     if (userInput.value.trim() === "") return;
 
-    // Ajout du message utilisateur
     let userMessage = document.createElement("div");
     userMessage.classList.add("message", "user");
     userMessage.textContent = userInput.value;
@@ -23,10 +23,10 @@ function sendMessage() {
 
     let userText = userInput.value;
 
-    // Simuler une réponse du bot avec animation
     setTimeout(() => {
         let botMessage = document.createElement("div");
         botMessage.classList.add("message", "bot");
+        botMessage.textContent = "Je réfléchis...";
         chatBox.appendChild(botMessage);
 
         fetchResponse(userText).then(response => {
@@ -36,7 +36,7 @@ function sendMessage() {
             if (isError) {
                 botMessage.classList.add("error");
             }
-
+            botMessage.textContent = ""
             typeWriter(botMessage, messageText);
         });
 
@@ -65,7 +65,6 @@ async function fetchResponse(userText) {
     }
 }
 
-// Effet machine à écrire
 function typeWriter(element, text, i = 0, step = 3, speed = 20) {
     if (i < text.length) {
         element.textContent += text.substring(i, i + step);
@@ -115,6 +114,43 @@ function opensearch_button() {
         .catch(error => {
             logOutput.innerText = "Erreur : " + error;
         });
+    });
+}
+
+function override_prompt() {
+    let logOutput = document.getElementById("log-output");
+    document.getElementById("override-prompt").addEventListener("click", function() {
+        document.getElementById("popup").style.display = "flex";
+    });
+
+    document.getElementById("close-popup").addEventListener("click", function() {
+        document.getElementById("popup").style.display = "none";
+    });
+
+    document.getElementById("submit-prompt").addEventListener("click", function() {
+        const userPrompt = document.getElementById("user-prompt").value;
+        let resultDiv = document.getElementById("result-message")
+
+        if (userPrompt) {
+            resultDiv.innerText = "Prompt soumis avec succès.";
+            resultDiv.style.color = "green";
+            popup.style.display = "none";
+            fetch("/override_prompt", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: userPrompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                logOutput.innerText = JSON.stringify(data, null, 2);
+            })
+        .catch(error => {
+            logOutput.innerText = "Erreur : " + error;
+        });
+        } else {
+            resultDiv.innerText = "Veuillez entrer un texte.";
+            resultDiv.style.color = "red";
+        }
     });
 }
 
