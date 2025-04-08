@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", opensearch_button);
 document.addEventListener("DOMContentLoaded", create_and_deploy_agent);
 document.addEventListener("DOMContentLoaded", delete_agent);
 document.addEventListener("DOMContentLoaded", override_prompt);
+document.addEventListener("DOMContentLoaded", display_fine_tune);
+document.addEventListener("DOMContentLoaded", display_prompt);
 
 function sendMessage() {
     let userInput = document.getElementById("user-input");
@@ -78,7 +80,6 @@ function elastic_button() {
     let fetchButton = document.getElementById("fetch-data");
 
     fetchButton.replaceWith(fetchButton.cloneNode(true));
-    fetchButton = document.getElementById("fetch-data");
 
     fetchButton.addEventListener("click", function() {
         logOutput.innerText = "Chargement...";
@@ -101,7 +102,6 @@ function opensearch_button() {
     let fetchButton = document.getElementById("upload-data");
 
     fetchButton.replaceWith(fetchButton.cloneNode(true));
-    fetchButton = document.getElementById("upload-data");
 
     fetchButton.addEventListener("click", function() {
         logOutput.innerText = "Chargement...";
@@ -160,21 +160,20 @@ function create_and_deploy_agent() {
     let fetchButton = document.getElementById("create-agent");
 
     fetchButton.replaceWith(fetchButton.cloneNode(true));
-    fetchButton = document.getElementById("create-agent");
 
     document.getElementById("create-agent").addEventListener("click", function() {
         logOutput.innerText = "Chargement...";
-    fetch("/create_and_deploy_agent", {
-        method: "POST",
-    })
-    .then(response => response.json())
-    .then(data => {
-        logOutput.innerText = JSON.stringify(data, null, 2);
-    })
-    .catch(error => {
-        logOutput.innerText = "Erreur : " + error;
+        fetch("/create_and_deploy_agent", {
+            method: "POST",
+        })
+        .then(response => response.json())
+        .then(data => {
+            logOutput.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            logOutput.innerText = "Erreur : " + error;
+        });
     });
-});
 }
 
 function delete_agent() {
@@ -182,19 +181,57 @@ function delete_agent() {
     let fetchButton = document.getElementById("delete-agent");
 
     fetchButton.replaceWith(fetchButton.cloneNode(true));
-    fetchButton = document.getElementById("delete-agent");
 
     document.getElementById("delete-agent").addEventListener("click", function() {
-        logOutput.innerText = "Chargement...";
-    fetch("delete_agent", {
-        method: "DELETE",
-    })
-    .then(response => response.json())
-    .then(data => {
-        logOutput.innerText = JSON.stringify(data, null, 2);
-    })
-    .catch(error => {
-        logOutput.innerText = "Erreur : " + error;
+        fetch("delete_agent", {
+            method: "DELETE",
+        })
+        .then(response => response.json())
+        .then(data => {
+            logOutput.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            logOutput.innerText = "Erreur : " + error;
+        });
     });
-});
+}
+
+function display_fine_tune() {
+    let logOutput = document.getElementById("log-output-default-data");
+    let fetchButton = document.getElementById("display-fine-tune");
+
+    fetchButton.replaceWith(fetchButton.cloneNode(true));
+
+    document.getElementById("display-fine-tune").addEventListener("click", function() {
+        fetch("display_fine_tune", {
+            method: "GET",
+        })
+        .then(response => response.json())
+        .then(data => {
+            logOutput.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            logOutput.innerText = "Erreur : " + error;
+        });
+    });
+}
+
+function display_prompt() {
+    let logOutput = document.getElementById("log-output-default-data");
+    let fetchButton = document.getElementById("display-prompt");
+
+    fetchButton.replaceWith(fetchButton.cloneNode(true));
+
+    document.getElementById("display-prompt").addEventListener("click", function() {
+        fetch("display_prompt", {
+            method: "GET",
+        })
+        .then(response => response.json())
+        .then(data => {
+            logOutput.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            logOutput.innerText = "Erreur : " + error;
+        });
+    });
 }

@@ -115,6 +115,14 @@ class OpenSearchManager:
             return f"Exception occurred while deleting agent {agent_id}: {e}"
         return f"Agent {agent_id} deleted successfully."
 
+    def get_agent_prompt(self, agent_id):
+        model_manager = OpenSearchModelManager(self.opensearch_client)
+        try:
+            prompt = model_manager.get_agent_prompt(agent_id)
+        except Exception as e:
+            return f"Exception occurred while getting agent prompt {agent_id}: {e}"
+        return prompt
+
 
 if __name__ == "__main__":
     config = configparser.ConfigParser()

@@ -205,7 +205,7 @@ class OpenSearchModelManager:
                     "index": index_name,
                     "embedding_field": "text_embedding",
                     "source_field": ["text"],
-                    "k": 10,
+                    "k": 1,
                     "input": "${parameters.question}"
                 }
             },
@@ -251,3 +251,24 @@ class OpenSearchModelManager:
             method="DELETE",
             url=endpoint
         )
+
+    def get_agent_prompt(self, agent_id):
+        """
+        Search for an agent by id and retrieve prompt
+
+        :param agent_id: agent id
+        :return: agent parameters message
+        """
+        """
+        Search for an agent by name
+
+        :param agent_name: agent name
+        :return: agent id
+        """
+        endpoint = "/_plugins/_ml/agents/_search"
+        response = self.client.transport.perform_request(
+            method="GET",
+            url=endpoint,
+            body={"query": {"term": {"_id": agent_id}}}
+        )
+        return response["hits"]["hits"][0]["_source"]["tools"][1]["parameters"]["messages"]

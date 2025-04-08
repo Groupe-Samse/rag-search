@@ -92,6 +92,20 @@ def delete_agent():
         return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
     return jsonify({"response": opensearch_manager.delete_agent(global_agent_id)})
 
+@app.route("/display_fine_tune", methods=["GET"])
+def display_fine_tune():
+    with open("resources/fine_tune.jsonl", "r", encoding="utf-8") as f:
+        data = [json.loads(line) for line in f]
+    return json.dumps(data, indent=2, ensure_ascii=False)
+
+@app.route("/display_prompt", methods=["GET"])
+def display_prompt():
+    if opensearch_manager is None:
+        return jsonify({"error": "Open search not found, please launch an instance."})
+    if global_agent_id is None:
+        return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
+    return json.loads(opensearch_manager.get_agent_prompt(global_agent_id))
+
 
 @app.route("/get_response", methods=["POST"])
 def get_response():
