@@ -5,21 +5,6 @@ class OpenSearchModelManager:
     def __init__(self, opensearch_client):
         self.client = opensearch_client.client
 
-    def __search_model(self, model_name):
-        """
-        Search for a model by name
-
-        :param model_name: model name
-        :return: empty list if no model found, list of models corresponding otherwise
-        """
-        endpoint = "/_plugins/_ml/models/_search"
-        response = self.client.transport.perform_request(
-            method="GET",
-            url=endpoint,
-            body={"query": {"match": {"name.keyword": model_name}}}
-        )
-        return response["hits"]["hits"]
-
     def __get_model_id_from_task_id(self, task_id):
         """
         Get the model id from a task id
@@ -36,6 +21,21 @@ class OpenSearchModelManager:
             return response["model_id"]
         else:
             return None
+
+    def __search_model(self, model_name):
+        """
+        Search for a model by name
+
+        :param model_name: model name
+        :return: empty list if no model found, list of models corresponding otherwise
+        """
+        endpoint = "/_plugins/_ml/models/_search"
+        response = self.client.transport.perform_request(
+            method="GET",
+            url=endpoint,
+            body={"query": {"match": {"name.keyword": model_name}}}
+        )
+        return response["hits"]["hits"]
 
     def __search_connector(self, connector_name):
         """
@@ -233,7 +233,6 @@ class OpenSearchModelManager:
         :return:
         """
         endpoint = "/_plugins/_ml/agents/" + agent_id + "/_execute"
-
         return self.client.transport.perform_request(
             method="POST",
             url=endpoint,

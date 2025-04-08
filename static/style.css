@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
 body {
     background-color: #111;
     color: #fff;
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     margin: 0;
     height: 100vh;
     display: flex;
@@ -25,7 +25,7 @@ body {
 
 #chat-container {
     height: 90%;
-    width: 350px;
+    width: 500px;
     background: rgba(20, 20, 20, 0.8);
     border: 2px solid #ffcc00;
     border-radius: 12px;
@@ -45,7 +45,7 @@ body {
     padding: 10px;
     margin: 5px 0;
     border-radius: 8px;
-    max-width: 80%;
+    max-width: 90%;
 }
 
 .bot {

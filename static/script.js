@@ -37,7 +37,8 @@ function sendMessage() {
                 botMessage.classList.add("error");
             }
             botMessage.textContent = ""
-            typeWriter(botMessage, messageText);
+            const html = marked.parse(messageText);
+            botMessage.innerHTML = html;
         });
 
         chatBox.scrollTop = chatBox.scrollHeight;
