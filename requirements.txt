@@ -1,5 +1,7 @@
 requests~=2.32.3
-Flask
-elasticsearch
-opensearch-py
+Flask~=2.3.2
+elasticsearch~=8.13.0
+opensearch-py~=2.8.0
 config_loader
+spacy~=3.8.5
+fr_core_news_sm @ pip install https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.8.0/fr_core_news_sm-3.8.0-py3-none-any.whl

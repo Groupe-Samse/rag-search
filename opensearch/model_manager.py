@@ -192,7 +192,7 @@ class OpenSearchModelManager:
 
         agent_config = {
             "name": agent_name,
-            "type": "flow",
+            "type": "conversational_flow",
             "description": "this is a test agent",
             "app_type": "rag",
             "memory": {
