@@ -228,8 +228,8 @@ class OpenSearchModelManager:
         """
         Query an agent with a specific question
 
-        :param agent_id:
-        :param question:
+        :param agent_id: agent id
+        :param question: user question
         :return:
         """
         endpoint = "/_plugins/_ml/agents/" + agent_id + "/_execute"
@@ -237,6 +237,23 @@ class OpenSearchModelManager:
             method="POST",
             url=endpoint,
             body={"parameters": {"question": question}},
+            timeout=60
+        )
+
+    def query_agent_memory(self, agent_id, memory_id, question):
+        """
+        Query an agent with a specific question
+
+        :param agent_id: agent id
+        :param question: user question
+        :param memory_id: memory id
+        :return:
+        """
+        endpoint = "/_plugins/_ml/agents/" + agent_id + "/_execute"
+        return self.client.transport.perform_request(
+            method="POST",
+            url=endpoint,
+            body={"parameters": {"question": question, "memory_id": memory_id, "message_history_limit": 5}},
             timeout=60
         )
 

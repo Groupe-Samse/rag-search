@@ -94,18 +94,15 @@ class OpenSearchManager:
         print("Agent id " + agent_id)
         return agent_id
 
-    def upload_and_query_model(self, new_index_name, question, agent_profile="default", override_prompt=None):
-        agent_id = self.upload_model(new_index_name, agent_profile, override_prompt)
-        model_manager = OpenSearchModelManager(self.opensearch_client)
-        inference = model_manager.query_agent(agent_id, question)
-        print(inference)
-        return json.loads(inference["inference_results"][0]["output"][0]["result"])["choices"][0]["message"]["content"]
-
     def query_model(self, agent_id, question):
         model_manager = OpenSearchModelManager(self.opensearch_client)
         inference = model_manager.query_agent(agent_id, question)
-        print(inference)
-        return json.loads(inference["inference_results"][0]["output"][0]["result"])["choices"][0]["message"]["content"]
+        return inference["inference_results"][0]["output"]
+
+    def query_model_memory(self, agent_id, memory_id, question):
+        model_manager = OpenSearchModelManager(self.opensearch_client)
+        inference = model_manager.query_agent_memory(agent_id, memory_id, question)
+        return inference["inference_results"][0]["output"]
 
     def delete_agent(self, agent_id):
         model_manager = OpenSearchModelManager(self.opensearch_client)
@@ -132,7 +129,10 @@ if __name__ == "__main__":
     config_models = config["MODELS"]
     open_search_manager = OpenSearchManager(config_opensearch, config_resources, config_models)
     index_name = open_search_manager.upload_data()
-    open_search_manager.upload_and_query_model(new_index_name=index_name,
-                                               question="Bonjour, je souhaite soutenir l'ouverture et fermeture des portes relevables",
-                                               agent_profile="default",
-                                                override_prompt="")
+    global_agent_id = open_search_manager.upload_model(index_name)
+    output = open_search_manager.query_model(global_agent_id,
+                                             "Bonjour, je faire un busy board pour mes enfants, tu as des cadenas à me conseiller ?")
+    print(json.loads(open_search_manager.query_model_memory(
+        global_agent_id, output[0]["result"],
+        "Est-ce que tu as aussi des cadenas à code ?")[2]["result"])
+          ["choices"][0]["message"]["content"])
