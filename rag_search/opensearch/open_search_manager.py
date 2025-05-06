@@ -3,10 +3,10 @@ import json
 import os
 import sys
 
-from file.manage_json_file import read_clean_and_aggregate_tab
-from opensearch.data_manager import OpenSearchDataManager
-from opensearch.model_manager import OpenSearchModelManager
-from opensearch.open_search_client import OpenSearchClient
+from rag_search.file.manage_json_file import read_clean_and_aggregate_tab
+from rag_search.opensearch.data_manager import OpenSearchDataManager
+from rag_search.opensearch.model_manager import OpenSearchModelManager
+from rag_search.opensearch.open_search_client import OpenSearchClient
 
 OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
 current_dir = os.path.dirname(os.path.abspath(__file__))

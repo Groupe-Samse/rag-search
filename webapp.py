@@ -3,8 +3,8 @@ import json
 
 from flask import Flask, render_template, request, jsonify
 
-from connectors.elasticsearch.elastic_search_client import ElasticSearchClient
-from opensearch.open_search_manager import OpenSearchManager
+from rag_search.connectors.elastic_search_client import ElasticSearchClient
+from rag_search.opensearch.open_search_manager import OpenSearchManager
 
 # Config parser
 config = configparser.ConfigParser()
@@ -33,6 +33,7 @@ except Exception as e:
 override_index_name = "products_search_index_20250321175941"
 global_agent_id = None
 global_index_name = None
+global_agent_memory_id = None
 
 
 @app.route("/")
@@ -92,11 +93,13 @@ def delete_agent():
         return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
     return jsonify({"response": opensearch_manager.delete_agent(global_agent_id)})
 
+
 @app.route("/display_fine_tune", methods=["GET"])
 def display_fine_tune():
     with open("resources/fine_tune.jsonl", "r", encoding="utf-8") as f:
         data = [json.loads(line) for line in f]
     return json.dumps(data, indent=2, ensure_ascii=False)
+
 
 @app.route("/display_prompt", methods=["GET"])
 def display_prompt():
@@ -113,8 +116,27 @@ def get_response():
         return jsonify({"error": "Open search not found, please launch an instance."})
     if global_agent_id is None:
         return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
-    return jsonify({"response": opensearch_manager.query_model(global_agent_id, question=request.json["message"])})
 
+    global global_agent_memory_id
+    if global_agent_memory_id is None:
+        inference_output = opensearch_manager.query_model(global_agent_id, question=request.json["message"])
+        global_agent_memory_id = inference_output[0]["result"]
+
+    else:
+        inference_output = opensearch_manager.query_model_memory(global_agent_id, global_agent_memory_id,
+                                                                 request.json["message"])
+
+    return jsonify({"response": json.loads(inference_output[2]["result"])["choices"][0]["message"]["content"]})
+
+# app route delete memory
+@app.route("/delete_memory", methods=["DELETE"])
+def delete_memory():
+    global global_agent_memory_id
+    if global_agent_memory_id is None:
+        return jsonify({"error": "Memory ID is not set, please query the model first."})
+    global_agent_memory_id = None
+    # TODO call opensearch to delete memory
+    return jsonify({"response": "Memory deleted successfully."})
 
 if __name__ == "__main__":
     app.run(debug=True)
