@@ -128,15 +128,16 @@ def get_response():
 
     return jsonify({"response": json.loads(inference_output[2]["result"])["choices"][0]["message"]["content"]})
 
-# app route delete memory
+
 @app.route("/delete_memory", methods=["DELETE"])
 def delete_memory():
     global global_agent_memory_id
     if global_agent_memory_id is None:
         return jsonify({"error": "Memory ID is not set, please query the model first."})
+    response = opensearch_manager.delete_memory(global_agent_memory_id)
     global_agent_memory_id = None
-    # TODO call opensearch to delete memory
-    return jsonify({"response": "Memory deleted successfully."})
+    return jsonify({"response": f"Memory deleted successfully. {response}"})
+
 
 if __name__ == "__main__":
     app.run(debug=True)

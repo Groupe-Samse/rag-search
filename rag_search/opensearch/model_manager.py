@@ -257,6 +257,18 @@ class OpenSearchModelManager:
             timeout=60
         )
 
+    def delete_memory(self, memory_id):
+        """
+        Delete a memory by id
+
+        :param memory_id: memory id
+        """
+        endpoint = "/_plugins/_ml/memory/" + memory_id
+        return self.client.transport.perform_request(
+            method="DELETE",
+            url=endpoint
+        )
+
     def delete_agent(self, agent_id):
         """
         Delete an agent by id

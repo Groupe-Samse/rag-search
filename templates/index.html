@@ -26,6 +26,9 @@
     <button id="delete-agent" onclick="delete_agent()" title="Supprimer l'agent dans Opensearch">
         <img src="static/assets/data_server_delete.webp" alt="Supprimer l'agent dans Opensearch" class="icon">
     </button>
+        <button id="delete-agent-memory" onclick="delete_agent_memory()" title="Supprimer la mémoire de l'agent dans Opensearch">
+        <img src="static/assets/memory.png" alt="Supprimer la mémoire de l'agent dans Opensearch" class="icon">
+    </button>
     <button id="display-fine-tune" onclick="display_fine_tune()" title="Afficher le fichier de fine-tune">
         <img src="static/assets/learn.png" alt="Afficher le fichier de fine-tune" class="icon">
     </button>
@@ -33,6 +36,7 @@
         <img src="static/assets/prompt.webp" alt="Afficher le prompt par défaut" class="icon">
     </button>
     <pre id="log-output" class="log-output"></pre>
+    <pre id="log-output-agent" class="log-output-agent"></pre>
     <pre id="log-output-default-data" class="log-output-default-data"></pre>
 </div>
 

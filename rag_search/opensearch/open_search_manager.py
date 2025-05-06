@@ -104,6 +104,11 @@ class OpenSearchManager:
         inference = model_manager.query_agent_memory(agent_id, memory_id, question)
         return inference["inference_results"][0]["output"]
 
+    def delete_memory(self, memory_id):
+        model_manager = OpenSearchModelManager(self.opensearch_client)
+        response = model_manager.delete_memory(memory_id)
+        return response
+
     def delete_agent(self, agent_id):
         model_manager = OpenSearchModelManager(self.opensearch_client)
         try:

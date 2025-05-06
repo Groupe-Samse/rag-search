@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", delete_agent);
 document.addEventListener("DOMContentLoaded", override_prompt);
 document.addEventListener("DOMContentLoaded", display_fine_tune);
 document.addEventListener("DOMContentLoaded", display_prompt);
+document.addEventListener("DOMContentLoaded", delete_agent_memory);
 
 function sendMessage() {
     let userInput = document.getElementById("user-input");
@@ -119,7 +120,7 @@ function opensearch_button() {
 }
 
 function override_prompt() {
-    let logOutput = document.getElementById("log-output");
+    let logOutput = document.getElementById("log-output-agent");
     document.getElementById("override-prompt").addEventListener("click", function() {
         document.getElementById("popup").style.display = "flex";
     });
@@ -156,7 +157,7 @@ function override_prompt() {
 }
 
 function create_and_deploy_agent() {
-    let logOutput = document.getElementById("log-output");
+    let logOutput = document.getElementById("log-output-agent");
     let fetchButton = document.getElementById("create-agent");
 
     fetchButton.replaceWith(fetchButton.cloneNode(true));
@@ -177,13 +178,33 @@ function create_and_deploy_agent() {
 }
 
 function delete_agent() {
-    let logOutput = document.getElementById("log-output");
+    let logOutput = document.getElementById("log-output-agent");
     let fetchButton = document.getElementById("delete-agent");
 
     fetchButton.replaceWith(fetchButton.cloneNode(true));
 
     document.getElementById("delete-agent").addEventListener("click", function() {
         fetch("delete_agent", {
+            method: "DELETE",
+        })
+        .then(response => response.json())
+        .then(data => {
+            logOutput.innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+            logOutput.innerText = "Erreur : " + error;
+        });
+    });
+}
+
+function delete_agent_memory() {
+    let logOutput = document.getElementById("log-output-agent");
+    let fetchButton = document.getElementById("delete-agent-memory");
+
+    fetchButton.replaceWith(fetchButton.cloneNode(true));
+
+    document.getElementById("delete-agent-memory").addEventListener("click", function() {
+        fetch("delete_memory", {
             method: "DELETE",
         })
         .then(response => response.json())
