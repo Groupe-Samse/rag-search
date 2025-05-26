@@ -177,13 +177,15 @@ class OpenSearchModelManager:
             print("Agent already exists")
             return agent[0]["_id"]
 
-        default_prompt = """Tu es un expert en vente de produits de bricolage, spécialisé dans le conseil personnalisé aux clients et tu utilises des réponses provenant d'une recherche pour fournir des recommandations précises. Mon contexte est que je travaille dans une enseigne de bricolage et je souhaite aider mes clients à trouver les produits adaptés à leurs projets. Tu vas jouer le rôle d'un vendeur de bricolage expérimenté, répondant uniquement si une réponse pertinente est disponible à partir de la recherche sémantique. Voici les étapes à suivre : 1. Si une réponse est fournie en entrée, afficher l'id produit et analyser les informations pour comprendre le besoin du client 2. Présenter le ou les produits recommandés en décrivant leurs principales caractéristiques et avantages spécifiques au projet du client. 3. Expliquer en quoi ces produits sont les plus adaptés en fonction des critères fournis, comme la durabilité, le prix ou l'efficacité. 4. Offrir des conseils supplémentaires, comme des accessoires ou outils complémentaires, uniquement si la recherche sémantique propose des options pertinentes. 5. Si aucune information ne correspond exactement au besoin du client, indiquer poliment qu'aucun produit spécifique n’est disponible dans cette catégorie. Le résultat attendu est une réponse ciblée et utile pour le client, uniquement fournie si une recommandation pertinente existe via la recherche sémantique. Selon les réponses dans ce contexte, réponds au mieux à l'utilisateur :"""
+        default_prompt = """Tu es un expert en vente de produits de bricolage, spécialisé dans le conseil personnalisé aux clients et tu utilises des réponses provenant d'une recherche pour fournir des recommandations précises. Mon contexte est que je travaille dans une enseigne de bricolage et je souhaite aider mes clients à trouver les produits adaptés à leurs projets. Tu vas jouer le rôle d'un vendeur de bricolage expérimenté, répondant uniquement si une réponse pertinente est disponible à partir de la recherche sémantique. Voici les étapes à suivre : 1. Si une réponse est fournie en entrée, afficher l'id produit et analyser les informations pour comprendre le besoin du client 2. Présenter le ou les produits recommandés en décrivant leurs principales caractéristiques et avantages spécifiques au projet du client. 3. Expliquer en quoi ces produits sont les plus adaptés en fonction des critères fournis, comme la durabilité, le prix ou l'efficacité. 4. Offrir des conseils supplémentaires, comme des accessoires ou outils complémentaires, uniquement si la recherche sémantique propose des options pertinentes. 5. Si aucune information ne correspond exactement au besoin du client, indiquer poliment qu'aucun produit spécifique n’est disponible dans cette catégorie. Le résultat attendu est une réponse ciblée et utile pour le client, uniquement fournie si une recommandation pertinente existe via la réponse conjointe de sémantique et plein texte. Selon les réponses dans les deux contextes de recherche suivants : vectoriel, plein texte, réponds au mieux à l'utilisateur en donnant plus de poids à :"""
         prompt = override_prompt if override_prompt else default_prompt
 
         vector_db_output = "${parameters.VectorDBTool.output}"
+        search_index_output = "${parameters.SearchIndexTool.output}"
         user_content = "${parameters.question}"
+        semantic_detection = "${parameters.semantic_detection}"
 
-        full_system_content = prompt + " " + vector_db_output
+        full_system_content = prompt + " " + semantic_detection + " " + vector_db_output + " " + search_index_output
 
         messages = f"""[
             {{"role": "system", "content": "{full_system_content}"}},
@@ -198,17 +200,28 @@ class OpenSearchModelManager:
             "memory": {
                 "type": "conversation_index"
             },
-            "tools": [{
-                "type": "VectorDBTool",
-                "parameters": {
-                    "model_id": sentence_transformer_model_id,
-                    "index": index_name,
-                    "embedding_field": "text_embedding",
-                    "source_field": ["text"],
-                    "k": 1,
-                    "input": "${parameters.question}"
-                }
-            },
+            "tools": [
+                {
+                    "type": "SearchIndexTool",
+                    "description": "Simple search request to the index",
+                    "include_output_in_agent_response": "false",
+                    "parameters": {
+                        "input": "{\"index\": " + index_name + ",  \"query\": { \"_source\": \"libelleProduit\", \"query\": { \"match\": { \"libelleProduit\" :\"" + user_content + "\" }}} }"
+                    }
+                },
+                {
+                    "type": "VectorDBTool",
+                    "description": "A vector database tool to retrieve relevant documents",
+                    "include_output_in_agent_response": "false",
+                    "parameters": {
+                        "model_id": sentence_transformer_model_id,
+                        "index": index_name,
+                        "embedding_field": "text_embedding",
+                        "source_field": ["text"],
+                        "k": 1,
+                        "input": "${parameters.question}"
+                    }
+                },
                 {
                     "type": "MLModelTool",
                     "description": "A general tool to answer questions",
@@ -224,23 +237,24 @@ class OpenSearchModelManager:
         response = self.client.transport.perform_request(method="POST", url=endpoint, body=agent_config)
         return response["agent_id"]
 
-    def query_agent(self, agent_id, question):
+    def query_agent(self, agent_id, question, semantic_detection):
         """
         Query an agent with a specific question
 
         :param agent_id: agent id
         :param question: user question
+        :param semantic_detection: semantic detection result
         :return:
         """
         endpoint = "/_plugins/_ml/agents/" + agent_id + "/_execute"
         return self.client.transport.perform_request(
             method="POST",
             url=endpoint,
-            body={"parameters": {"question": question}},
+            body={"parameters": {"question": question, "semantic_detection": semantic_detection}},
             timeout=60
         )
 
-    def query_agent_memory(self, agent_id, memory_id, question):
+    def query_agent_memory(self, agent_id, memory_id, question, semantic_detection):
         """
         Query an agent with a specific question
 
@@ -253,7 +267,8 @@ class OpenSearchModelManager:
         return self.client.transport.perform_request(
             method="POST",
             url=endpoint,
-            body={"parameters": {"question": question, "memory_id": memory_id, "message_history_limit": 5}},
+            body={"parameters": {"question": question, "semantic_detection": semantic_detection, "memory_id": memory_id,
+                                 "message_history_limit": 5}},
             timeout=60
         )
 

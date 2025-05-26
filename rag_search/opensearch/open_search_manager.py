@@ -94,14 +94,14 @@ class OpenSearchManager:
         print("Agent id " + agent_id)
         return agent_id
 
-    def query_model(self, agent_id, question):
+    def query_model(self, agent_id, question, semantic_detection):
         model_manager = OpenSearchModelManager(self.opensearch_client)
-        inference = model_manager.query_agent(agent_id, question)
+        inference = model_manager.query_agent(agent_id, question, semantic_detection)
         return inference["inference_results"][0]["output"]
 
-    def query_model_memory(self, agent_id, memory_id, question):
+    def query_model_memory(self, agent_id, memory_id, question, semantic_detection):
         model_manager = OpenSearchModelManager(self.opensearch_client)
-        inference = model_manager.query_agent_memory(agent_id, memory_id, question)
+        inference = model_manager.query_agent_memory(agent_id, memory_id, question, semantic_detection)
         return inference["inference_results"][0]["output"]
 
     def delete_memory(self, memory_id):
@@ -136,8 +136,8 @@ if __name__ == "__main__":
     index_name = open_search_manager.upload_data()
     global_agent_id = open_search_manager.upload_model(index_name)
     output = open_search_manager.query_model(global_agent_id,
-                                             "Bonjour, je faire un busy board pour mes enfants, tu as des cadenas à me conseiller ?")
+                                             "Bonjour, je faire un busy board pour mes enfants, tu as des cadenas à me conseiller ?", "SEMANTIC")
     print(json.loads(open_search_manager.query_model_memory(
         global_agent_id, output[0]["result"],
         "Est-ce que tu as aussi des cadenas à code ?")[2]["result"])
-          ["choices"][0]["message"]["content"])
+          ["choices"][0]["message"]["content"], "SEMANTIC")

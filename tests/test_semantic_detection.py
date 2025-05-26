@@ -1,6 +1,6 @@
 import unittest
 
-from rag_search.spacy import semantic_detection
+from rag_search.semantic import semantic_detection
 
 
 class TestClassifier(unittest.TestCase):

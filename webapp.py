@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, jsonify
 
 from rag_search.connectors.elastic_search_client import ElasticSearchClient
 from rag_search.opensearch.open_search_manager import OpenSearchManager
+from semantic.semantic_detection import Classifier
 
 # Config parser
 config = configparser.ConfigParser()
@@ -23,6 +24,7 @@ app.config["DEBUG"] = True
 
 opensearch_manager = None
 elastic_client = None
+classifier = Classifier()
 
 try:
     elastic_client = ElasticSearchClient(config["ELASTICSEARCH"])
@@ -118,13 +120,19 @@ def get_response():
         return jsonify({"error": "Agent ID is not set, please deploy the agent first."})
 
     global global_agent_memory_id
+
+    user_request = request.json["message"]
+    semantic_detection = classifier.classify_query(user_request)
+
+    print("User request detected as:", semantic_detection)
+
     if global_agent_memory_id is None:
-        inference_output = opensearch_manager.query_model(global_agent_id, question=request.json["message"])
+        inference_output = opensearch_manager.query_model(global_agent_id, user_request, semantic_detection)
         global_agent_memory_id = inference_output[0]["result"]
 
     else:
         inference_output = opensearch_manager.query_model_memory(global_agent_id, global_agent_memory_id,
-                                                                 request.json["message"])
+                                                                 user_request, semantic_detection)
 
     return jsonify({"response": json.loads(inference_output[2]["result"])["choices"][0]["message"]["content"]})
 

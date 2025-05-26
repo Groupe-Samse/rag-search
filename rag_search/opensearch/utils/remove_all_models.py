@@ -46,6 +46,6 @@ def remove_all_models(open_search_url):
 
 if __name__ == "__main__":
     config = configparser.ConfigParser()
-    config.read("../config.ini")
+    config.read("../../../config.ini")
     config_opensearch = config["OPENSEARCH"]
     remove_all_models("http://" + config_opensearch["HOST"] + ":" + config_opensearch["PORT"])

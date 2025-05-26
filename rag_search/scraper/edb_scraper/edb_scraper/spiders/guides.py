@@ -3,6 +3,21 @@ import scrapy
 from scrapy.cmdline import execute
 
 
+def parse_guide(response):
+    title = response.css('h1::text').get()
+    category = response.css('div.article__category b.category__name::text').get()
+    sections = response.css('h2::text').getall()
+    paragraphs = response.css('p::text').getall()
+    text = ' '.join(paragraphs).strip()
+
+    yield {
+        'titre_article': title,
+        'category': category,
+        'titres_sections': ' | '.join(sections),
+        'texte': text,
+    }
+
+
 class GuidesSpider(scrapy.Spider):
     name = "guides"
     start_urls = ["https://blog.entrepot-du-bricolage.fr/guides/le-guide-de-lisolation-thermique-et-phonique/"
@@ -30,25 +45,11 @@ class GuidesSpider(scrapy.Spider):
                   "https://blog.entrepot-du-bricolage.fr/guides/le-guide-du-parquet-et-du-sol-stratifie/",
                   "https://blog.entrepot-du-bricolage.fr/guides/actuellement/"]
 
-    def parse(self, response):
+    def parse(self, response, **kwargs):
         # Sélectionner tous les liens vers les guides
         guide_links = response.css('div.category__list a::attr(href)').getall()
         for link in guide_links:
-            yield response.follow(link, callback=self.parse_guide)
-
-    def parse_guide(self, response):
-        title = response.css('h1::text').get()
-        category = response.css('div.article__category b.category__name::text').get()
-        sections = response.css('h2::text').getall()
-        paragraphs = response.css('p::text').getall()
-        text = ' '.join(paragraphs).strip()
-
-        yield {
-            'titre_article': title,
-            'category': category,
-            'titres_sections': ' | '.join(sections),
-            'texte': text,
-        }
+            yield response.follow(link, callback=parse_guide)
 
 
 if __name__ == "__main__":

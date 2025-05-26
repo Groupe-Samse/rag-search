@@ -9,7 +9,7 @@ class Classifier:
                              "combien"]
 
         if "?" in query or any(query.lower().startswith(w) for w in semantic_triggers):
-            return "semantic"
+            return "SEMANTIC"
 
         doc = self.nlp(query)
         verb_count = sum(1 for token in doc if token.pos_ in ["VERB", "AUX"])
@@ -17,6 +17,6 @@ class Classifier:
         token_len = len(doc)
 
         if verb_count > 0 and (verb_count / (noun_count + 1)) > 0.5 and token_len > 3:
-            return "semantic"
+            return "SEMANTIC"
 
-        return "keyword"
+        return "FULL_TEXT"

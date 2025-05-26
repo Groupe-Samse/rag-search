@@ -167,3 +167,4 @@ cython_debug/
 /.idea/modules.xml
 /.idea/rag-search.iml
 /.idea/vcs.xml
+/tests/_trial_temp/_trial_marker
