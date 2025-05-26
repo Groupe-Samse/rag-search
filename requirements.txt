@@ -4,4 +4,5 @@ elasticsearch~=8.13.0
 opensearch-py~=2.8.0
 config_loader
 spacy~=3.8.5
+scrapy~=2.13.0
 fr_core_news_sm @ pip install https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.8.0/fr_core_news_sm-3.8.0-py3-none-any.whl
